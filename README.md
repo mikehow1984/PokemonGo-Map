@@ -1,7 +1,11 @@
-##Example.py rebase underway, look in [rewrite branch](https://github.com/AHAAAAAAA/PokemonGo-Map/tree/py-rewrite) for more info.
-##Please refrain from submitting pull requests at this time.
+#Support for master branch dropped.#
+##Accepting only pull requests for develop branch. ##
 
-#[Offical Website] (https://jz6.github.io/PoGoMap/#)
+#[Official Website] (https://jz6.github.io/PoGoMap/)#
+
+##[Android Port](https://github.com/omkarmoghe/Pokemap) <== Direct all andriod related PRs and discussion here.
+
+Please submit all pull requests to [Develop Branch](https://github.com/AHAAAAAAA/PokemonGo-Map/tree/develop)
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/AHAAAAAAA/PokemonGo-Map/master/static/cover.png">
@@ -18,6 +22,6 @@ Using this software is against the ToS and can get you banned. Use at your own r
 Building off [Mila432](https://github.com/Mila432/Pokemon_Go_API)'s PokemonGo API, [tejado's additions](https://github.com/tejado/pokemongo-api-demo), [leegao's additions](https://github.com/leegao/pokemongo-api-demo/tree/simulation) and [Flask-GoogleMaps](https://github.com/rochacbruno/Flask-GoogleMaps).
 
 ---
-For instructions, please refer to [the wiki](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki)
+#For instructions, please refer to [the wiki](https://github.com/AHAAAAAAA/PokemonGo-Map/wiki)#
 
 Hello Paul Xu the Internship king ;)
