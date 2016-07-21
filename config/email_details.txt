@@ -1,0 +1,5 @@
+EMAIL_ADDRESS=your_gmail_name@gmail.com
+PASSWORD=your_gmail_password_here
+POKEMON=Gyarados,Magmar,Electabuzz,Snorlax,Omanyte,Omastar,Blastoise,Charizard,Kabuto,Kabutops,Chansey
+
+##add or remove whichever Pokemon you want email notifications for above##

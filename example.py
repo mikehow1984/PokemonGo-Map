@@ -18,6 +18,10 @@ import threading
 import werkzeug.serving
 import pokemon_pb2
 import time
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from google.protobuf.internal import encoder
 from google.protobuf.message import DecodeError
 from s2sphere import *
@@ -615,6 +619,7 @@ def main():
         print('Completed: ' + str(
             ((step+1) + pos * .25 - .25) / (steplimit2) * 100) + '%')
 
+    email_rare_pokemon()
     global NEXT_LAT, NEXT_LONG
     if (NEXT_LAT and NEXT_LONG and
             (NEXT_LAT != FLOAT_LAT or NEXT_LONG != FLOAT_LONG)):
@@ -691,6 +696,7 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             if pokename.lower() not in only and pokeid not in only:
                 continue
 
+
         disappear_timestamp = time.time() + poke.TimeTillHiddenMs \
             / 1000
 
@@ -706,6 +712,66 @@ transform_from_wgs_to_gcj(Location(Fort.Latitude, Fort.Longitude))
             "id": poke.pokemon.PokemonId,
             "name": pokename
         }
+			
+def email_rare_pokemon():
+    pkmn_email = open(os.getcwd() + '/config/email_details.txt')
+	
+    #if the config file for the email has lines added, these variables will have to be rewriten
+    email_line = pkmn_email.readline()
+    EMAIL_ADDRESS = email_line.replace(email_line[:email_line.find("=") + 1], '')
+    pass_line = pkmn_email.readline()
+    EMAIL_PASS = pass_line.replace(pass_line[:pass_line.find("=") + 1], '')
+    pkmn_line = pkmn_email.readline()
+    rare_pkmn = pkmn_line.replace(pkmn_line[:pkmn_line.find("=") + 1], '').split(',')
+    rare_found = False
+
+    msg= MIMEMultipart('alternative')
+    msg['Subject'] = 'Rare pokemon have been spotted near you!'
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = EMAIL_ADDRESS
+
+    text = ""
+    html = """\
+        <html>
+            <head></head>
+                <body>"""
+    for pkmn_key in pokemons.keys():
+        pkmn = pokemons[pkmn_key]
+        if pkmn['name'] in rare_pkmn:
+            rare_found = True
+            zero_hour = time.strftime('%m:%M:%S %p', time.localtime(pkmn['disappear_time']))
+            pkmn_map_link = "https://www.google.com/maps?q=%f,%f" % (pkmn['lat'], pkmn['lng'])
+            text += "OMG a %s has been spotted near you!\n\nHere's a map: %s\n\nYou have until %s to catch %s.\n\n" % (pkmn['name'], pkmn_map_link, zero_hour, pkmn['name'])
+            html += """\
+            <p>OMG a %s has been spotted near you!</p>
+            <p>Here's a map: <a href='%s'>HERE</a></p>
+            <p>You have until %s to catch %s.</p>
+            <br/>""" % (pkmn['name'], pkmn_map_link, zero_hour, pkmn['name'])
+
+    if rare_found:
+        rare_found = False
+        text += "Happy hunting!"
+        html += """\
+				        <p>Happy hunting!</p>
+            </body>
+        </html>"""
+
+        part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
+			
+        msg.attach(part1)
+        msg.attach(part2)
+        try:
+            s= smtplib.SMTP('smtp.gmail.com',587)
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
+            s.login(EMAIL_ADDRESS, EMAIL_PASS)
+            s.sendmail(EMAIL_ADDRESS, EMAIL_ADDRESS, msg.as_string())
+            print "Found rare pokemon. Sending email to %s." % EMAIL_ADDRESS
+            s.quit()
+        except smtplib.SMTPException:
+            print "Found rare Pokemon but unable to send email. Check the map!"
 
 def clear_stale_pokemons():
     current_time = time.time()
