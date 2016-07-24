@@ -11,7 +11,7 @@ from pgoapi import PGoApi
 from pgoapi.utilities import f2i, get_cellid
 
 from . import config
-from .models import parse_map, email_rare_pokemon
+from .models import parse_map
 
 log = logging.getLogger(__name__)
 
